@@ -61,7 +61,7 @@ const Main = ({ startQuiz }) => {
 
     // const API = `https://opentdb.com/api.php?amount=${numOfQuestions}&category=${category}&difficulty=${difficulty}&type=${questionsType}`;
     // const result = await axios.post('/chatgpt', { prompt: input });
-    const API = `http://localhost:3001/api`;
+    const API = `https://openaiapi-n48x.onrender.com/api`;
 
     const input = `
       Generate multiple-choice questions based on the given study material:
