@@ -3,8 +3,7 @@
   "version": "6.0.0",
   "private": true,
   "author": {
-    "name": "Safdar Jamal",
-    "url": "https://safdarjamal.github.io"
+    "name": "Nurbek Taizhanov"
   },
   "homepage": "https://safdarjamal.github.io/quiz-app/",
   "dependencies": {
@@ -28,11 +27,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "storybook": "storybook dev -p 9009 ",
-    "build-storybook": "storybook build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -64,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@storybook/addon-actions": "^7.4.5",
     "@storybook/addon-essentials": "^7.4.5",
     "@storybook/addon-interactions": "^7.4.5",
