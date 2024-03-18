@@ -1,11 +1,10 @@
 {
   "name": "quiz-app",
   "version": "6.0.0",
-  "private": true,
   "author": {
     "name": "Nurbek Taizhanov"
   },
-  "homepage": "https://safdarjamal.github.io/quiz-app/",
+  "homepage": "",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
