@@ -59,7 +59,7 @@ const Main = ({ startQuiz }) => {
 
     if (error) setError(null);
 
-    const API = `https://openaiapi-n48x.onrender.com/api`;
+    const API = `https://openaiapi-n48x.onrender.com/api/`;
 
     const input = `
       Generate multiple-choice questions based on the given study material:
