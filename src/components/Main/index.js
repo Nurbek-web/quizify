@@ -59,8 +59,6 @@ const Main = ({ startQuiz }) => {
 
     if (error) setError(null);
 
-    // const API = `https://opentdb.com/api.php?amount=${numOfQuestions}&category=${category}&difficulty=${difficulty}&type=${questionsType}`;
-    // const result = await axios.post('/chatgpt', { prompt: input });
     const API = `https://openaiapi-n48x.onrender.com/api`;
 
     const input = `
