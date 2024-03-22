@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Container, Menu } from 'semantic-ui-react';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { Container, Menu } from "semantic-ui-react";
 
-import Stats from './Stats';
-import QNA from './QNA';
+import Stats from "./Stats";
+import QNA from "./QNA";
 
 const Result = ({
   totalQuestions,
@@ -13,7 +13,7 @@ const Result = ({
   replayQuiz,
   resetQuiz,
 }) => {
-  const [activeTab, setActiveTab] = useState('Stats');
+  const [activeTab, setActiveTab] = useState("Stats");
 
   const handleTabClick = (e, { name }) => {
     setActiveTab(name);
@@ -24,16 +24,16 @@ const Result = ({
       <Menu fluid widths={2}>
         <Menu.Item
           name="Stats"
-          active={activeTab === 'Stats'}
+          active={activeTab === "Stats"}
           onClick={handleTabClick}
         />
         <Menu.Item
           name="QNA"
-          active={activeTab === 'QNA'}
+          active={activeTab === "QNA"}
           onClick={handleTabClick}
         />
       </Menu>
-      {activeTab === 'Stats' && (
+      {activeTab === "Stats" && (
         <Stats
           totalQuestions={totalQuestions}
           correctAnswers={correctAnswers}
@@ -42,7 +42,7 @@ const Result = ({
           resetQuiz={resetQuiz}
         />
       )}
-      {activeTab === 'QNA' && <QNA questionsAndAnswers={questionsAndAnswers} />}
+      {activeTab === "QNA" && <QNA questionsAndAnswers={questionsAndAnswers} />}
       <br />
     </Container>
   );

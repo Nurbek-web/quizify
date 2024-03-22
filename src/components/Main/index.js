@@ -62,7 +62,7 @@ const Main = ({ startQuiz }) => {
     const API = `https://openaiapi-n48x.onrender.com/api/`;
 
     const input = `
-      Generate multiple-choice questions based on the given study material:
+      Generate open-ended questions based on the given study material. Open-ended questions start with “Why?” “How?” and “What?” They encourage a full answer, rather than the simple “yes” or “no” response that is usually given to a closed-ended question:
       ${material}
 
       Diffuculty of quiz: ${difficulty}
@@ -70,39 +70,22 @@ const Main = ({ startQuiz }) => {
 
       The response format in the provided JSON structure is designed to convey information about multiple-choice questions in a clear and organized manner. Here's a justification for each key-value pair in the response:
 
-      response_code:
-
-      Type: Integer
-      Justification: This code can be used to indicate the status or outcome of the request. A value of 0 typically signifies success, while other values could represent different types of responses (e.g., error codes).
       results:
-
       Type: Array of objects
       Justification: The array allows for multiple questions and their associated details to be included in the response. Each object in the array represents a separate question.
-      type:
-
-      Type: String
-      Justification: Indicates the type of question format. In this case, "multiple" denotes a multiple-choice question. Other types like "true/false" or "open-ended" could be used for different question structures.
+      
       difficulty:
-
       Type: String
       Justification: Provides information about the difficulty level of the question. This can help users understand the complexity of the question and can be used for sorting or categorization.
-      category:
-
-      Type: String
-      Justification: Specifies the category or topic to which the question belongs. This helps users quickly identify the subject matter of the question.
+      
       question:
-
       Type: String
       Justification: Contains the actual question text. This is the core information being sought, and it needs to be presented clearly for users to read and understand.
+      
       correct_answer:
-
       Type: String
       Justification: Provides the correct answer to the question. This allows users to compare their responses and determine correctness. It's crucial for evaluating the user's knowledge.
-      incorrect_answers:
-
-      Type: Array of strings
-      Justification: Lists the incorrect answer options for the multiple-choice question. This array allows for the presentation of distractors or alternatives, creating a complete set of options for the user.
-
+      
     `;
 
     const result = await axios.post(API, { message: input });
@@ -111,17 +94,11 @@ const Main = ({ startQuiz }) => {
     const parsedResponse = JSON.parse(result.data.results);
     let results = parsedResponse.results;
 
-    results.forEach((element) => {
-      element.options = shuffle([
-        element.correct_answer,
-        ...element.incorrect_answers,
-      ]);
-    });
-
     setProcessing(false);
     startQuiz(
       results,
-      countdownTime.hours + countdownTime.minutes + countdownTime.seconds
+      countdownTime.hours + countdownTime.minutes + countdownTime.seconds,
+      material
     );
 
     // fetch(API)

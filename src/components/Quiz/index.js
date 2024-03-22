@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   Container,
   Segment,
@@ -10,11 +10,12 @@ import {
   Message,
   Menu,
   Header,
-} from 'semantic-ui-react';
-import he from 'he';
+  Input,
+} from "semantic-ui-react";
+import he from "he";
 
-import Countdown from '../Countdown';
-import { getLetter } from '../../utils';
+import Countdown from "../Countdown";
+import { getLetter } from "../../utils";
 
 const Quiz = ({ data, countdownTime, endQuiz }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -22,9 +23,10 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
   const [userSlectedAns, setUserSlectedAns] = useState(null);
   const [questionsAndAnswers, setQuestionsAndAnswers] = useState([]);
   const [timeTaken, setTimeTaken] = useState(null);
+  const [userAnswer, setUserAnswer] = useState("");
 
   useEffect(() => {
-    if (questionIndex > 0) window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (questionIndex > 0) window.scrollTo({ top: 0, behavior: "smooth" });
   }, [questionIndex]);
 
   const handleItemClick = (e, { name }) => {
@@ -40,15 +42,15 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
     const qna = questionsAndAnswers;
     qna.push({
       question: he.decode(data[questionIndex].question),
-      user_answer: userSlectedAns,
+      user_answer: userAnswer,
       correct_answer: he.decode(data[questionIndex].correct_answer),
-      point,
     });
+
+    setUserAnswer("");
 
     if (questionIndex === data.length - 1) {
       return endQuiz({
         totalQuestions: data.length,
-        correctAnswers: correctAnswers + point,
         timeTaken,
         questionsAndAnswers: qna,
       });
@@ -60,7 +62,7 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
     setQuestionsAndAnswers(qna);
   };
 
-  const timeOver = timeTaken => {
+  const timeOver = (timeTaken) => {
     return endQuiz({
       totalQuestions: data.length,
       correctAnswers,
@@ -90,34 +92,22 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                   />
                 </Item.Extra>
                 <br />
+
                 <Item.Meta>
                   <Message size="huge" floating>
                     <b>{`Q. ${he.decode(data[questionIndex].question)}`}</b>
                   </Message>
                   <br />
                   <Item.Description>
-                    <h3>Please choose one of the following answers:</h3>
+                    <h3>Please type your answer:</h3>
+                    <Input
+                      fluid
+                      value={userAnswer}
+                      onChange={(e) => setUserAnswer(e.target.value)}
+                    />
                   </Item.Description>
-                  <Divider />
-                  <Menu vertical fluid size="massive">
-                    {data[questionIndex].options.map((option, i) => {
-                      const letter = getLetter(i);
-                      const decodedOption = he.decode(option);
-
-                      return (
-                        <Menu.Item
-                          key={decodedOption}
-                          name={decodedOption}
-                          active={userSlectedAns === decodedOption}
-                          onClick={handleItemClick}
-                        >
-                          <b style={{ marginRight: '8px' }}>{letter}</b>
-                          {decodedOption}
-                        </Menu.Item>
-                      );
-                    })}
-                  </Menu>
                 </Item.Meta>
+
                 <Divider />
                 <Item.Extra>
                   <Button
@@ -128,7 +118,7 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                     size="big"
                     icon="right chevron"
                     labelPosition="right"
-                    disabled={!userSlectedAns}
+                    disabled={userAnswer == ""}
                   />
                 </Item.Extra>
               </Item.Content>
