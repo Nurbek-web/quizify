@@ -17,7 +17,7 @@ import he from "he";
 import Countdown from "../Countdown";
 import { getLetter } from "../../utils";
 
-const Quiz = ({ data, countdownTime, endQuiz }) => {
+const Quiz = ({ data, countdownTime, endQuiz, questionType }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [userSlectedAns, setUserSlectedAns] = useState(null);
@@ -35,25 +35,43 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
 
   const handleNext = () => {
     let point = 0;
-    if (userSlectedAns === he.decode(data[questionIndex].correct_answer)) {
-      point = 1;
+    const qna = questionsAndAnswers;
+    if (questionType == "multiple") {
+      if (userSlectedAns === he.decode(data[questionIndex].correct_answer)) {
+        point = 1;
+      }
+      qna.push({
+        question: he.decode(data[questionIndex].question),
+        user_answer: userSlectedAns,
+        correct_answer: he.decode(data[questionIndex].correct_answer),
+        point,
+      });
+    } else {
+      qna.push({
+        question: he.decode(data[questionIndex].question),
+        user_answer: userAnswer,
+        correct_answer: he.decode(data[questionIndex].correct_answer),
+      });
+      setUserAnswer("");
     }
 
-    const qna = questionsAndAnswers;
-    qna.push({
-      question: he.decode(data[questionIndex].question),
-      user_answer: userAnswer,
-      correct_answer: he.decode(data[questionIndex].correct_answer),
-    });
-
-    setUserAnswer("");
-
     if (questionIndex === data.length - 1) {
-      return endQuiz({
-        totalQuestions: data.length,
-        timeTaken,
-        questionsAndAnswers: qna,
-      });
+      if (questionType == "multiple") {
+        return endQuiz({
+          totalQuestions: data.length,
+          correctAnswers: correctAnswers + point,
+          timeTaken,
+          questionsAndAnswers: qna,
+          questionType: "multiple",
+        });
+      } else {
+        return endQuiz({
+          totalQuestions: data.length,
+          timeTaken,
+          questionsAndAnswers: qna,
+          questionType: "string",
+        });
+      }
     }
 
     setCorrectAnswers(correctAnswers + point);
@@ -93,34 +111,81 @@ const Quiz = ({ data, countdownTime, endQuiz }) => {
                 </Item.Extra>
                 <br />
 
-                <Item.Meta>
-                  <Message size="huge" floating>
-                    <b>{`Q. ${he.decode(data[questionIndex].question)}`}</b>
-                  </Message>
-                  <br />
-                  <Item.Description>
-                    <h3>Please type your answer:</h3>
-                    <Input
-                      fluid
-                      value={userAnswer}
-                      onChange={(e) => setUserAnswer(e.target.value)}
-                    />
-                  </Item.Description>
-                </Item.Meta>
+                {questionType == "multiple" ? (
+                  <>
+                    <Item.Meta>
+                      <Message size="huge" floating>
+                        <b>{`Q. ${he.decode(data[questionIndex].question)}`}</b>
+                      </Message>
+                      <br />
+                      <Item.Description>
+                        <h3>Please choose one of the following answers:</h3>
+                      </Item.Description>
+                      <Divider />
+                      <Menu vertical fluid size="massive">
+                        {data[questionIndex].options.map((option, i) => {
+                          const letter = getLetter(i);
+                          const decodedOption = he.decode(option);
 
-                <Divider />
-                <Item.Extra>
-                  <Button
-                    primary
-                    content="Next"
-                    onClick={handleNext}
-                    floated="right"
-                    size="big"
-                    icon="right chevron"
-                    labelPosition="right"
-                    disabled={userAnswer == ""}
-                  />
-                </Item.Extra>
+                          return (
+                            <Menu.Item
+                              key={decodedOption}
+                              name={decodedOption}
+                              active={userSlectedAns === decodedOption}
+                              onClick={handleItemClick}
+                            >
+                              <b style={{ marginRight: "8px" }}>{letter}</b>
+                              {decodedOption}
+                            </Menu.Item>
+                          );
+                        })}
+                      </Menu>
+                    </Item.Meta>
+                    <Divider />
+                    <Item.Extra>
+                      <Button
+                        primary
+                        content="Next"
+                        onClick={handleNext}
+                        floated="right"
+                        size="big"
+                        icon="right chevron"
+                        labelPosition="right"
+                        disabled={!userSlectedAns}
+                      />
+                    </Item.Extra>
+                  </>
+                ) : (
+                  <>
+                    <Item.Meta>
+                      <Message size="huge" floating>
+                        <b>{`Q. ${he.decode(data[questionIndex].question)}`}</b>
+                      </Message>
+                      <br />
+                      <Item.Description>
+                        <h3>Please type your answer:</h3>
+                        <Input
+                          fluid
+                          value={userAnswer}
+                          onChange={(e) => setUserAnswer(e.target.value)}
+                        />
+                      </Item.Description>
+                    </Item.Meta>
+                    <Divider />
+                    <Item.Extra>
+                      <Button
+                        primary
+                        content="Next"
+                        onClick={handleNext}
+                        floated="right"
+                        size="big"
+                        icon="right chevron"
+                        labelPosition="right"
+                        disabled={userAnswer == ""}
+                      />
+                    </Item.Extra>
+                  </>
+                )}
               </Item.Content>
             </Item>
           </Item.Group>

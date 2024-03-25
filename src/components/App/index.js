@@ -18,8 +18,9 @@ const App = () => {
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [resultData, setResultData] = useState(null);
   const [studyMaterial, setStudyMaterial] = useState("");
+  const [qtype, setQtype] = useState("");
 
-  const startQuiz = (data, countdownTime, material) => {
+  const startQuiz = (data, countdownTime, material, questionType) => {
     setLoading(true);
     setLoadingMessage({
       title: "Loading your quiz...",
@@ -27,6 +28,7 @@ const App = () => {
     });
     setCountdownTime(countdownTime);
     setStudyMaterial(material);
+    setQtype(questionType);
 
     setTimeout(() => {
       setData(data);
@@ -42,64 +44,73 @@ const App = () => {
       message: "Just a moment!",
     });
 
-    const API = `https://openaiapi-n48x.onrender.com/api/`;
+    if (resultData.questionType == "string") {
+      const API = `https://openaiapi-n48x.onrender.com/api/`;
 
-    let input =
-      `
-      Analyze questions and answers given by student based on the given study material. Check student's answers for open-ended questions:
-      ${studyMaterial}` +
-      resultData.questionsAndAnswers
-        .map(
-          (item) =>
-            `{question:${item.question}, student_answer: ${item.user_answer}}`
-        )
-        .join("\n") +
-      `
-      The response format in the provided JSON structure is designed to convey information about multiple-choice questions in a clear and organized manner. Here's a justification for each key-value pair in the response:
+      let input =
+        `
+        Analyze questions and answers given by student based on the given study material. Check student's answers for open-ended questions:
+        ${studyMaterial}` +
+        resultData.questionsAndAnswers
+          .map(
+            (item) =>
+              `{question:${item.question}, student_answer: ${item.user_answer}}\n`
+          )
+          .join("\n") +
+        `
+        The response format in the provided JSON structure is designed to convey information about multiple-choice questions in a clear and organized manner. Here's a justification for each key-value pair in the response:
+  
+        totalQuestions:
+        Type: Number
+        Justification: Number of questions total.
+        
+        correctAnswers:
+        Type: Number
+        Justification: Number of correct answers of student.
+        
+        questionsAndAnswers:
+        Type: Array of objects
+        Justification: Each object in the array represents a separate question, user_answer, correct_answer, point.
+        
+        question:
+        Type: String
+        Justification: Contains the actual question text.
+        
+        user_answer:
+        Type: String
+        Justification: Student's actual answer for question 
+  
+        correct_answer:
+        Type: String
+        Justification: Correct answer to the question. This allows users to compare their responses and determine correctness. It's crucial for evaluating the user's knowledge.
+  
+        point:
+        Type: Number
+        Justification: If the answer of student is correct, point is equal to 1. Otherwise, it equals to 0. 
+  
+      `;
 
-      totalQuestions:
-      Type: Number
-      Justification: Number of questions total.
-      
-      correctAnswers:
-      Type: Number
-      Justification: Number of correct answers of student.
-      
-      questionsAndAnswers:
-      Type: Array of objects
-      Justification: Each object in the array represents a separate question, user_answer, correct_answer, point.
-      
-      question:
-      Type: String
-      Justification: Contains the actual question text.
-      
-      user_answer:
-      Type: String
-      Justification: Student's actual answer for question 
+      const result = await axios.post(API, { message: input });
+      console.log(result);
+      const parsedResponse = JSON.parse(result.data.results);
+      let results = parsedResponse;
+      console.log(results);
+      results.timeTaken = resultData.timeTaken;
 
-      correct_answer:
-      Type: String
-      Justification: Correct answer to the question. This allows users to compare their responses and determine correctness. It's crucial for evaluating the user's knowledge.
-
-      point:
-      Type: Number
-      Justification: If the answer of student is correct, point is equal to 1. Otherwise, it equals to 0. 
-
-    `;
-
-    const result = await axios.post(API, { message: input });
-    console.log(result);
-    const parsedResponse = JSON.parse(result.data.results);
-    let results = parsedResponse;
-    console.log(results);
-    results.timeTaken = resultData.timeTaken;
-
-    setTimeout(() => {
-      setIsQuizStarted(false);
-      setIsQuizCompleted(true);
-      setResultData(results);
-      setLoading(false);
-    }, 2000);
+      setTimeout(() => {
+        setIsQuizStarted(false);
+        setIsQuizCompleted(true);
+        setResultData(results);
+        setLoading(false);
+      }, 2000);
+    } else {
+      setTimeout(() => {
+        setIsQuizStarted(false);
+        setIsQuizCompleted(true);
+        setResultData(resultData);
+        setLoading(false);
+      }, 2000);
+    }
   }
 
   const replayQuiz = () => {
@@ -148,7 +159,12 @@ const App = () => {
         <Main startQuiz={startQuiz} />
       )}
       {!loading && isQuizStarted && (
-        <Quiz data={data} countdownTime={countdownTime} endQuiz={endQuiz} />
+        <Quiz
+          data={data}
+          countdownTime={countdownTime}
+          questionType={qtype}
+          endQuiz={endQuiz}
+        />
       )}
       {!loading && isQuizCompleted && (
         <Result {...resultData} replayQuiz={replayQuiz} resetQuiz={resetQuiz} />
