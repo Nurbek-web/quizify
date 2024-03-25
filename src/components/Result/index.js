@@ -10,6 +10,7 @@ const Result = ({
   correctAnswers,
   timeTaken,
   questionsAndAnswers,
+  feedback,
   replayQuiz,
   resetQuiz,
 }) => {
@@ -38,6 +39,7 @@ const Result = ({
           totalQuestions={totalQuestions}
           correctAnswers={correctAnswers}
           timeTaken={timeTaken}
+          feedback={feedback}
           replayQuiz={replayQuiz}
           resetQuiz={resetQuiz}
         />

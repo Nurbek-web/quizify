@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Button } from "semantic-ui-react";
+import { Segment, Header, Button, FeedEvent } from "semantic-ui-react";
 
 import ShareButton from "../ShareButton";
 import { calculateScore, calculateGrade, timeConverter } from "../../utils";
@@ -9,6 +9,7 @@ const Stats = ({
   totalQuestions,
   correctAnswers,
   timeTaken,
+  feedback,
   replayQuiz,
   resetQuiz,
 }) => {
@@ -18,8 +19,8 @@ const Stats = ({
 
   return (
     <Segment>
-      <Header as="h1" textAlign="center" block>
-        {remarks}
+      <Header as="h2" textAlign="center" block>
+        {feedback}
       </Header>
       <Header as="h2" textAlign="center" block>
         Grade: {grade}

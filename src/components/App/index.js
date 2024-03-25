@@ -19,6 +19,7 @@ const App = () => {
   const [resultData, setResultData] = useState(null);
   const [studyMaterial, setStudyMaterial] = useState("");
   const [qtype, setQtype] = useState("");
+  const [feedback, setFeedback] = useState("");
 
   const startQuiz = (data, countdownTime, material, questionType) => {
     setLoading(true);
@@ -60,6 +61,10 @@ const App = () => {
         `
         The response format in the provided JSON structure is designed to convey information about multiple-choice questions in a clear and organized manner. Here's a justification for each key-value pair in the response:
   
+        overallFeedback:
+        Type: String
+        Justification: Give overall feedback to student.
+
         totalQuestions:
         Type: Number
         Justification: Number of questions total.
@@ -87,7 +92,8 @@ const App = () => {
         point:
         Type: Number
         Justification: If the answer of student is correct, point is equal to 1. Otherwise, it equals to 0. 
-  
+
+
       `;
 
       const result = await axios.post(API, { message: input });
@@ -96,6 +102,7 @@ const App = () => {
       let results = parsedResponse;
       console.log(results);
       results.timeTaken = resultData.timeTaken;
+      setFeedback(results.overallFeedback);
 
       setTimeout(() => {
         setIsQuizStarted(false);
@@ -167,7 +174,12 @@ const App = () => {
         />
       )}
       {!loading && isQuizCompleted && (
-        <Result {...resultData} replayQuiz={replayQuiz} resetQuiz={resetQuiz} />
+        <Result
+          {...resultData}
+          feedback={feedback}
+          replayQuiz={replayQuiz}
+          resetQuiz={resetQuiz}
+        />
       )}
     </Layout>
   );
