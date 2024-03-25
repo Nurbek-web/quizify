@@ -256,7 +256,7 @@ const Main = ({ startQuiz }) => {
                 <p>Give a study material</p>
                 <TextArea
                   style={{ width: "100%" }} // Adjust the min height, font size, and width as needed
-                  placeholder="Enter your study material"
+                  placeholder="Mitosis is the process by which a cell replicates its chromosomes and then segregates them, producing two identical nuclei in preparation for cell division. Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes.                  "
                   value={material}
                   onChange={(e) => setMaterial(e.target.value)}
                   disabled={processing}
