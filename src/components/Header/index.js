@@ -31,7 +31,12 @@ const Header = () => {
   return (
     <Menu stackable inverted>
       <Menu.Item header>
-        <h1>QuizApp</h1>
+        <img
+          src="logo.png"
+          style={{ maxWidth: "350px", height: "auto" }}
+          className="ui image responsive fluid"
+          alt="Logo"
+        />
       </Menu.Item>
     </Menu>
   );

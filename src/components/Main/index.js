@@ -161,22 +161,17 @@ const Main = ({ startQuiz }) => {
       <Segment>
         <Item.Group divided>
           <Item>
-            <Item.Image
-              src={
-                "https://almaty.fizmat.kz/wp-content/uploads/sites/2/2017/03/NIS-Photo.jpg"
-              }
-            />
             <Item.Content>
-              <Item.Header>
+              {/* <Item.Header>
                 <h1>AUTO Quiz</h1>
-              </Item.Header>
+              </Item.Header> */}
               {error && (
                 <Message error onDismiss={() => setError(null)}>
                   <Message.Header>Error!</Message.Header>
                   {error.message}
                 </Message>
               )}
-              <Divider />
+              {/* <Divider /> */}
               <Item.Meta>
                 <p>How many questions do you want in your quiz?</p>
                 <Dropdown
