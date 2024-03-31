@@ -22,7 +22,7 @@ const App = () => {
   const [feedback, setFeedback] = useState("");
 
   const startQuiz = (data, countdownTime, material, questionType) => {
-    setLoading(true);
+    setLoa  ding(true);
     setLoadingMessage({
       title: "Loading your quiz...",
       message: "It won't be long!",
